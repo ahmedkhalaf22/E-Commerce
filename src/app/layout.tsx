@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { Navbar } from "./_component/Navbar/Navbar";
 import Footer from "./_component/Footer/Footer";
 import { Toaster } from "@/components/ui/sonner"
+import UserProvider from "@/UserProvider";
+import CountProvider from "@/CountProvider";
 
 const Encode_Sansfont = Encode_Sans({
  weight:["100","400","800"],
@@ -30,12 +32,16 @@ export default function RootLayout({
       <body
         className={`${ Encode_Sansfont.className} `}
       >
-        <Navbar/>
+<UserProvider>
+<CountProvider>
+            <Navbar/>
         <main className="p-5">
           {children}
         </main>
         <Toaster/>
         <Footer/>
+</CountProvider>
+</UserProvider>
 
       </body>
     </html>

@@ -17,26 +17,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export default function ForgetPassword() {
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp"
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+
+export default function ResetCode() {
 
   const Route=useRouter()
   
-  const schemaForgetPassword = z.object({
+  const schemaResetCode = z.object({
       
-      email: z.email("email invalid").nonempty("email required"),
+      resetCode: z.string().nonempty("reset Code required"),
     })
-  const ForgetPasswordForm = useForm<z.infer<typeof schemaForgetPassword>>({
+  const ResetCodeForm = useForm<z.infer<typeof schemaResetCode>>({
     defaultValues: {
-      email: "",
+      resetCode: "",
       
 
     },
-    resolver: zodResolver(schemaForgetPassword),
+    resolver: zodResolver(schemaResetCode),
   });
 
-  async function handleForgetPassword(values: z.infer<typeof schemaForgetPassword>) {
+  async function handleResetCode(values: z.infer<typeof schemaResetCode>) {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/forgotPasswords`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/verifyResetCode`,
       {
         method: "post",
         body: JSON.stringify(values),
@@ -47,10 +54,10 @@ export default function ForgetPassword() {
     );
     const data = await res.json();
     console.log(data);
-    if (data.statusMsg == "success") {
+    if (data.status == "Success") {
     
       
-      Route.push("/ResetCode")
+      Route.push("/ResetPassword")
     } else {
       toast.error(data.message, { position: "top-center" });
     }
@@ -58,21 +65,36 @@ export default function ForgetPassword() {
   return (
     <div className="w-3/4 mx-auto ">
       <h1 className="text-3xl ">send email</h1>
-      <Form {...ForgetPasswordForm}>
+      <Form {...ResetCodeForm}>
         <form
           className="space-y-5 "
-          onSubmit={ForgetPasswordForm.handleSubmit(handleForgetPassword)}
+          onSubmit={ResetCodeForm.handleSubmit(handleResetCode)}
         >
 
 
           <FormField
-            control={ForgetPasswordForm.control}
-            name="email"
+            control={ResetCodeForm.control}
+            name="resetCode"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>email:</FormLabel>
                 <FormControl>
-                  <Input type="email" {...field} />
+
+
+                  <InputOTP {...field} maxLength={6} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    </InputOTP>
+
+
+
+
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -85,7 +107,7 @@ export default function ForgetPassword() {
 
 
 
-          <Button className="w-full bg-main">send email</Button>
+          <Button className="w-full bg-main">verfiy code</Button>
         </form>
       </Form>
     </div>

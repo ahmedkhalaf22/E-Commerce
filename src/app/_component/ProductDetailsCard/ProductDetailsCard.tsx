@@ -3,6 +3,7 @@ import { Data } from '@/interface/productdetails.interafce'
 import Image from 'next/image'
 import React from 'react'
 import Productdetailslider from '../Productdetailslider/Productdetailslider'
+import AddCartBtn from '../ProductCard/AddCartBtn'
 
 
 export default function ProductDetailsCard({item}:{item:Data}) {
@@ -22,7 +23,7 @@ export default function ProductDetailsCard({item}:{item:Data}) {
     <span><i className='fa-solid fa-star rating-color'></i> {ratingsAverage}</span>
 
   </div>
-  <Button className='bg-main rounded-2xl w-full'>add to cart</Button>
+  <AddCartBtn id={_id}/>
         </div >
       </div>
     </div>

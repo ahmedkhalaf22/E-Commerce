@@ -14,8 +14,8 @@ export default function MainSlider() {
     autoplaySpeed:3000
   };
   return (
-    <div className="grid grid-cols-12 m-5 ">
-      <div className="col-span-10">
+    <div className="grid grid-cols-12 m-5 mx-auto ">
+      <div className="col-span-9">
         <Slider {...settings}>
       <div>
         <Image src="/images/slider-image-1.jpeg" alt="img1" className="w-full object-cover h-96" width={1000} height={1000}/>
@@ -29,8 +29,9 @@ export default function MainSlider() {
 
     </Slider>
       </div>
-      <div className="col-span-2">
-
+      <div className="col-span-3 ">
+            <Image src="/images/blog-img-1.jpeg" alt="blog 1" className="h-48 object-cover" width={1000} height={1000}/>
+            <Image src="/images/blog-img-2.jpeg" alt="blog 1" className="h-48 object-cover" width={1000} height={1000}/>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import Image from 'next/image'
 import { product } from '@/interface/porducts.interface'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import AddCartBtn from './AddCartBtn'
 
 export default function ProductCard({item}:{item:product}) {
     const{imageCover,title,ratingsAverage,price,category:{name} ,_id}=item
@@ -29,11 +30,12 @@ export default function ProductCard({item}:{item:product}) {
 
   </div>
   </CardContent>
+
+</Link>
       <CardFooter>
-        <Button className='bg-main rounded-2xl w-full'>add to cart</Button>
+        <AddCartBtn id={_id}/>
 
     </CardFooter>
-</Link>
 </Card>
     </div>
   )
