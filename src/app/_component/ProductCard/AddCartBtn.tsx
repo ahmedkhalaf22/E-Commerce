@@ -2,12 +2,12 @@
 
 import { AddProductToCart } from "@/CardAction/CardAction";
 import { Button } from "@/components/ui/button";
-import { CountContext } from "@/CountProvider";
+import { CartContext } from "@/providers/CartProvider";
 import { useContext } from "react";
 import { toast } from "sonner";
 
 export default function AddCartBtn({ id }: { id: string }) {
-  const { setCartItemsCount } = useContext(CountContext);
+  const { setCartItemsCount, refreshCart } = useContext(CartContext);
   async function addproduct(id: string) {
     try {
       const data = await AddProductToCart(id);
@@ -18,10 +18,12 @@ export default function AddCartBtn({ id }: { id: string }) {
           0
         );
         setCartItemsCount(sum);
+        
+        await refreshCart();
       } else {
         toast.error("wrong id", { position: "top-center" });
       }
-    } catch (err) {
+    } catch  {
       toast.error("Can't  add product to cart without login", {
         position: "top-center",
       });

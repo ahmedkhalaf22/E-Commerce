@@ -8,9 +8,8 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
   const {cartid}:{cartid:string} = useParams()
 
   const shippingSchema = z.object({
@@ -83,7 +82,7 @@ export default function page() {
       </FormItem>
     )}
   />
-  <Button> pay now</Button>
+  <Button className='cursor-pointer'> pay now</Button>
   </form>
 </Form>
     </div>

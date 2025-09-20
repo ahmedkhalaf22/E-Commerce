@@ -6,19 +6,17 @@ import {
   UpdateNumberOfProduct,
 } from "@/CardAction/CardAction";
 import { Button } from "@/components/ui/button";
-import { GetUserToken } from "@/GetUserToken";
 import { cart, CartData } from "@/interface/cart.interface";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
-import CartLoading from "../../_component/cartLoading/CartLoading";
+import CartLoading from "../../_component/CartLoading/CartLoading";
 import { toast } from "sonner";
-import { CountContext } from "@/CountProvider";
+import { CartContext } from "@/providers/CartProvider";
 import Link from "next/link";
 
 export default function Cart() {
-  const { setCartItemsCount }: any = useContext(CountContext);
+  const { setCartItemsCount, refreshCart } = useContext(CartContext);
   const [cartloading, setcartloading] = useState(true);
-  //  const token= await GetUserToken()
   const [cart, setcart] = useState<cart>();
   useEffect(() => {
     getAllDAta();
@@ -35,32 +33,41 @@ export default function Cart() {
   async function removeProduct(id: string) {
     const data = await deleteProduct(id);
 
-    if (data.status == "success")
+    if (data.status == "success") {
       toast.success("prouduct deleted", { position: "top-center" });
-    setcart(data.data);
-    const sum = data.data.products.reduce(
-      (total: number, item: { count: number }) => (total += item.count),
-      0
-    );
-    setCartItemsCount(sum);
+      setcart(data.data);
+      const sum = data.data.products.reduce(
+        (total: number, item: { count: number }) => (total += item.count),
+        0
+      );
+      setCartItemsCount(sum);
+      await refreshCart();
+    }
   }
 
   async function clearAll() {
     const data = await clearCart();
 
-    if (data.message == "success") setcart(undefined);
-    setCartItemsCount(0);
+    if (data.message == "success") {
+      setcart(undefined);
+      setCartItemsCount(0);
+      await refreshCart();
+    }
   }
 
   async function updateProduct(id: string, count: number) {
     const data = await UpdateNumberOfProduct(id, count);
 
-    if (data.status == "success") setcart(data.data);
-    const sum = data.data.products.reduce(
-      (total: number, item: { count: number }) => (total += item.count),
-      0
-    );
-    setCartItemsCount(sum);
+    if (data.status == "success") {
+      setcart(data.data);
+      const sum = data.data.products.reduce(
+        (total: number, item: { count: number }) => (total += item.count),
+        0
+      );
+      setCartItemsCount(sum);
+      
+      await refreshCart();
+    }
   }
 
   return (
@@ -76,7 +83,7 @@ export default function Cart() {
 
           <Button
             onClick={clearAll}
-            className="bg-red-600 rounded-2xl my-3 float-right"
+            className="bg-red-600 rounded-2xl my-3 float-right cursor-pointer"
           >
             clear cart
           </Button>
@@ -133,13 +140,14 @@ export default function Cart() {
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <button
+                          
                             onClick={() => {
                               updateProduct(
                                 item.product._id,
                                 (item.count -= 1)
                               );
                             }}
-                            className="inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                            className="cursor-pointer inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                             type="button"
                           >
                             <span className="sr-only">Quantity button</span>
@@ -173,7 +181,7 @@ export default function Cart() {
                                 (item.count += 1)
                               );
                             }}
-                            className="inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                            className="cursor-pointer inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                             type="button"
                           >
                             <span className="sr-only">Quantity button</span>
@@ -203,7 +211,7 @@ export default function Cart() {
                           onClick={() => {
                             removeProduct(item.product._id);
                           }}
-                          className="bg-red-600 text-white"
+                          className="bg-red-600 text-white cursor-pointer"
                         >
                           <i className="fa-solid fa-trash"></i>
                         </Button>

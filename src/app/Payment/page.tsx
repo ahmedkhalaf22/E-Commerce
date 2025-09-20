@@ -1,25 +1,25 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CountContext } from "@/CountProvider";
+import { CartContext } from "@/providers/CartProvider";
 import { cashPaymentActions } from "@/PaymentActions/Paymentcash";
 import { useRouter } from "next/navigation";
 import React, { useContext, useRef } from "react";
 import { toast } from "sonner";
 
 export default function Payment() {
-  const { cartId, setCartItemsCount } = useContext(CountContext);
-  const details = useRef("");
-  const phone = useRef("");
-  const city = useRef("");
+  const { cartId, setCartItemsCount } = useContext(CartContext);
+  const details = useRef<HTMLInputElement>(null);
+  const phone = useRef<HTMLInputElement>(null);
+  const city = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   async function cashpayment() {
     const values = {
       shippingAddress: {
-        details: details.current?.value,
-        phone: phone.current?.value,
-        city: city.current?.value,
+        details: details.current?.value || "",
+        phone: phone.current?.value || "",
+        city: city.current?.value || "",
       },
     };
 
@@ -27,8 +27,7 @@ export default function Payment() {
 
     try {
       const data = await cashPaymentActions(cartId, values);
-      toast.success("payment success");
-      // window.location.reload()
+      toast.success("payment success", { position: "top-center" });
       setCartItemsCount(0);
       setTimeout(() => {
         router.push("/allorders");
@@ -54,8 +53,7 @@ export default function Payment() {
         <label htmlFor="city">city</label>
         <Input ref={city} className="mb-4" type="text" id="city" />
 
-        <Button onClick={cashpayment}>pay now</Button>
-
+        <Button className="cursor-pointer" onClick={cashpayment}>pay now</Button>
       </div>
     </div>
   );

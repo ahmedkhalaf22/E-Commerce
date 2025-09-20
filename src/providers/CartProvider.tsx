@@ -7,32 +7,34 @@ import {
   useEffect,
   useState,
 } from "react";
-import { GetUserToken } from "./GetUserToken";
-import { getcartdata } from "./CardAction/CardAction";
-import { CartData } from "./interface/cart.interface";
-import { cart } from "@/interface/cart.interface";
+import { GetUserToken } from "../GetUserToken";
+import { getcartdata } from "../CardAction/CardAction";
+import { CartData } from "../interface/cart.interface";
 
-interface CountContextType {
+interface CartContextType {
   cartItemsCount: number;
   setCartItemsCount: Dispatch<SetStateAction<number>>;
   cartId: string;
+  refreshCart: () => Promise<void>;
 }
 
-export const CountContext = createContext<CountContextType>({
+export const CartContext = createContext<CartContextType>({
   cartId: "",
   setCartItemsCount: () => {},
   cartItemsCount: 0,
+  refreshCart: async () => {},
 });
 
-export default function CountProvider({
+export default function CartProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [cartId, setcartId] = useState("0");
   const [cartItemsCount, setCartItemsCount] = useState(0);
+
   async function getcart() {
-    const token: any = await GetUserToken();
+    const token = await GetUserToken();
     console.log(token);
     if (token) {
       console.log("getting cart");
@@ -45,16 +47,26 @@ export default function CountProvider({
       setcartId(data.cartId);
     }
   }
+
+  const refreshCart = async () => {
+    await getcart();
+  };
+
   useEffect(() => {
     console.log("Start cart provider");
     getcart();
-  }, [cartItemsCount]);
+  }, []); 
 
   return (
-    <CountContext.Provider
-      value={{ cartItemsCount, setCartItemsCount, cartId }}
+    <CartContext.Provider
+      value={{ 
+        cartItemsCount, 
+        setCartItemsCount, 
+        cartId,
+        refreshCart
+      }}
     >
       {children}
-    </CountContext.Provider>
+    </CartContext.Provider>
   );
 }

@@ -21,10 +21,10 @@ import { signIn } from "next-auth/react";
 import { GetUserToken } from "@/GetUserToken";
 import { getcartdata } from "@/CardAction/CardAction";
 import { CartData } from "@/interface/cart.interface";
-import { CountContext } from "@/CountProvider";
+import { CartContext } from "@/providers/CartProvider";
 
-export default function login() {
-  const { setCartItemsCount } = useContext(CountContext);
+export default function Login() {
+  const { setCartItemsCount } = useContext(CartContext);
   const Route = useRouter();
 
   const schemalogin = z.object({
@@ -53,10 +53,10 @@ export default function login() {
     });
     if (data?.ok) {
       toast.success("login success", { position: "top-center" });
-      const token: any = await GetUserToken();
+      const token = await GetUserToken();
       if (token) {
         const data: CartData = await getcartdata();
-        let sum = data.data.products.reduce(
+        const sum = data.data.products.reduce(
           (total, item) => (total += item.count),
           0
         );
@@ -66,26 +66,6 @@ export default function login() {
     } else {
       toast.error(data?.error, { position: "top-center" });
     }
-
-    // const res = await fetch(
-    //   `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/signin`,
-    //   {
-    //     method: "post",
-    //     body: JSON.stringify(values),
-    //     headers: {
-    //       "content-type": "application/json",
-    //     },
-    //   }
-    // );
-    // const data = await res.json();
-    // console.log(data);
-    // if (data.message == "success") {
-
-    //   toast.success("login success", { position: "top-center" });
-    //   Route.push("/")
-    // } else {
-    //   toast.error(data.message, { position: "top-center" });
-    // }
   }
   return (
     <div className="w-3/4 mx-auto ">

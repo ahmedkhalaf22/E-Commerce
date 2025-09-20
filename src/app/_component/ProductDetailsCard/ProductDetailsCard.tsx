@@ -1,13 +1,11 @@
-import { Button } from '@/components/ui/button'
 import { Data } from '@/interface/productdetails.interafce'
-import Image from 'next/image'
 import React from 'react'
 import Productdetailslider from '../Productdetailslider/Productdetailslider'
 import AddCartBtn from '../ProductCard/AddCartBtn'
 
 
 export default function ProductDetailsCard({item}:{item:Data}) {
-    const{imageCover,title,ratingsAverage,price,category:{name} ,_id,description ,images}=item
+    const{title,ratingsAverage,price,category:{name} ,_id,description ,images}=item
   return (
     <div className='w-4/5 mx-auto my-10'>
       <div className='grid grid-cols-12 items-center gap-24  '>

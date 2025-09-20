@@ -2,11 +2,10 @@
 
 import { GetUserToken } from "@/GetUserToken"
 import { CartData } from "@/interface/cart.interface"
-import { error } from "console"
 
 export async function getcartdata(){
 
-    const token:any = await GetUserToken()
+    const token = await GetUserToken()
         if(!token){
         throw new Error("INVALID TOKEN")
     }
@@ -23,7 +22,7 @@ export async function getcartdata(){
 
 export async function AddProductToCart(id:string) {
 
-    const token:any = await GetUserToken()
+    const token = await GetUserToken()
         if(!token){
         throw new Error("INVALID TOKEN")
         }
@@ -43,7 +42,7 @@ export async function AddProductToCart(id:string) {
 
 
 export async function deleteProduct(id:string) {
-     const token:any = await GetUserToken()
+     const token= await GetUserToken()
         if(!token){
         throw new Error("INVALID TOKEN")
         }
@@ -59,7 +58,7 @@ export async function deleteProduct(id:string) {
 
 
 export async function clearCart() {
-     const token:any = await GetUserToken()
+     const token = await GetUserToken()
         if(!token){
         throw new Error("INVALID TOKEN")
         }
@@ -78,7 +77,7 @@ export async function clearCart() {
 
 export async function UpdateNumberOfProduct(id:string ,count:number) {
 
-    const token:any = await GetUserToken()
+    const token = await GetUserToken()
         if(!token){
         throw new Error("INVALID TOKEN")
         }
